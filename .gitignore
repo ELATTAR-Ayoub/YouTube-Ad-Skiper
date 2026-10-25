@@ -1,0 +1,34 @@
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials*.json
+secrets*.json
+
+# Dependencies and local output
+node_modules/
+coverage/
+*.log
+*.zip
+*.crx
+*.tmp
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+work/
+screenshots/
+*preview*.png
+
+# Browser profiles and local state
+User Data/
+Default/
+Local State
+Cookies
+History
+Login Data
+storage.local.json

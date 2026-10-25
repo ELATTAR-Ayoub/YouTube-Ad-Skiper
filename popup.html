@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <title>Your ad skips</title>
+ <link rel="stylesheet" href="styles/tokens.css">
+ <link rel="stylesheet" href="popup.css">
+ <script src="stats.js" defer></script>
+ <script src="popup.js" defer></script>
+</head>
+<body>
+ <main class="popup" aria-busy="true" id="popup">
+  <header class="header">
+   <div class="brand"><img src="icons/rabbit-128.png" alt="" width="40" height="40"><div><h1>Hop past the ads.</h1><p>Your skips, at a glance</p></div></div>
+   <button id="theme" class="icon-button" type="button" aria-label="Theme: system. Switch to light theme." title="Theme: system"><svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path id="theme-path" d="M4 4h16v12H4z M8 20h8 M12 16v4"/></svg></button>
+  </header>
+  <section class="today" aria-labelledby="today-label">
+   <div class="section-top"><h2 id="today-label">Ads skipped today</h2><span id="date" class="muted"></span></div>
+   <div class="today-count" id="today" aria-hidden="true">—</div>
+   <p id="today-accessible" class="sr-only">Loading today's count.</p>
+   <p id="daily-note" class="muted">Loading your counts…</p>
+  </section>
+  <section class="week-section" aria-labelledby="week-heading">
+   <div class="section-top"><h2 id="week-heading">This week</h2><span class="muted">Mon–Sun</span></div>
+   <div id="chart" class="chart" role="img" aria-label="Loading this week's daily counts."></div>
+  </section>
+  <section class="totals" aria-label="Ads skipped by period">
+   <div><p>This week</p><strong id="week">—</strong></div>
+   <div><p>This month</p><strong id="month">—</strong></div>
+   <div><p>This year</p><strong id="year">—</strong></div>
+  </section>
+  <div id="error" class="error" hidden><p>Couldn't load your counts.</p><button id="retry" type="button">Try again</button></div>
+  <footer><p><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Stored only on this device</p><p id="tracking-note">Counting starts with this update.</p></footer>
+  <p id="status" class="sr-only" role="status" aria-live="polite"></p>
+ </main>
+</body>
+</html>

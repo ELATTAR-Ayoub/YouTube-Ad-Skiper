@@ -1,10 +1,52 @@
-# YouTube Ad Skiper
+<p align="center">
+  <img src="icons/rabbit-128.png" alt="YouTube Ad Skiper rabbit logo" width="96" height="96">
+</p>
 
-<img src="icons/rabbit-128.png" alt="Orange rabbit logo" width="80" height="80">
+<h1 align="center">YouTube Ad Skiper</h1>
 
-A local Chrome extension that advances detected YouTube ads and clicks their
-Skip buttons, with an animated popup showing your daily, weekly, monthly and
-yearly skip counts.
+<p align="center"><strong>Hop past the ads. See your skips add up.</strong></p>
+
+<p align="center">
+  A Chrome extension that advances detected YouTube ads, clicks Skip buttons,
+  and tracks your skips in an animated rabbit-themed popup.
+</p>
+
+<p align="center">
+  <a href="#install-in-chrome">Install</a> ·
+  <a href="#features">Features</a> ·
+  <a href="#screenshots">Screenshots</a> ·
+  <a href="#privacy-and-permissions">Privacy</a> ·
+  <a href="#troubleshooting">Troubleshooting</a>
+</p>
+
+## Features
+
+| Feature | What you get |
+| --- | --- |
+| Automatic ad handling | Attempts to advance detected ad videos and then clicks available Skip buttons. |
+| Consecutive ads | Keeps checking through additional ads, Skip controls and advertiser end cards. |
+| One-second checks | Checks once per second while the YouTube tab is active and visible. |
+| Skip statistics | Daily, weekly, monthly and yearly totals, with duplicate-attempt protection. |
+| Visual activity | Animated counts and a seven-day chart in the rabbit popup. |
+| Theme choices | Light, dark and system themes, with reduced-motion support. |
+| Local data | Counts stay in your browser; the extension sends no analytics or browsing history. |
+| Simple setup | Plain HTML, CSS and JavaScript. No build step or Tampermonkey required. |
+
+## Screenshots
+
+<table>
+  <tr>
+    <th>Dark theme</th>
+    <th>Light theme</th>
+  </tr>
+  <tr>
+    <td><img src="docs/images/popup-dark.png" alt="Dark popup with a daily skip count, seven-day activity chart and weekly, monthly and yearly totals" width="360"></td>
+    <td><img src="docs/images/popup-light.png" alt="Light version of the rabbit statistics popup" width="360"></td>
+  </tr>
+</table>
+
+Screenshots use **sample counts** to demonstrate the interface. Your own counts
+start after installation; the extension does not include demonstration data.
 
 ## Install in Chrome
 

@@ -7,8 +7,9 @@ both actions without losing your preferences. **Jump ads to the end** and
 stored locally and apply to open YouTube tabs immediately after the initial
 update/reload. Existing skip counts are preserved.
 
-The toolbar uses the rabbit icon while an action is enabled, and a grey rabbit with orange pause bars
-icon with an OFF badge when paused or when both actions are disabled. The
+The toolbar uses the orange rabbit while an action is enabled, and the grey
+rabbit with orange pause bars and an OFF badge when paused or when both actions
+are disabled. The
 popup distinguishes Paused from No automatic actions. Both actions default
 to enabled when no preferences have been saved.
 

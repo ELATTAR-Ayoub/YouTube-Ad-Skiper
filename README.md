@@ -20,6 +20,9 @@
   <a href="#troubleshooting">Troubleshooting</a>
 </p>
 
+**Current version: 1.3.2.** The Forward sprint rabbit now appears in both active
+and paused states, with an orange accent throughout the popup.
+
 ## Features
 
 | Feature | What you get |
@@ -50,7 +53,13 @@
 Screenshots use **sample counts** to demonstrate the interface. Your own counts
 start after installation; the extension does not include demonstration data.
 
-<p align="center"><img src="docs/images/settings-dark.png" alt="Settings popup with master activation, Jump ads to the end, and Click Skip buttons switches" width="360"></p>
+<table>
+  <tr><th>Settings — active</th><th>Settings — paused</th></tr>
+  <tr>
+    <td><img src="docs/images/settings-dark.png" alt="Active orange rabbit and the three ad-skipping settings" width="360"></td>
+    <td><img src="docs/images/settings-paused-dark.png" alt="Paused gray rabbit with orange pause bars; individual action preferences remain enabled" width="360"></td>
+  </tr>
+</table>
 
 ## Install in Chrome
 
@@ -88,11 +97,20 @@ Pausing does not erase your counters. The two action preferences can be edited
 while paused. If both actions are off, no automatic action runs even when the
 master switch is on.
 
-<p>
-  <img src="icons/rabbit-48.png" alt="Active rabbit toolbar icon" width="32" height="32"> <strong>Active:</strong> orange rabbit.
-  &nbsp;
-  <img src="icons/paused-48.png" alt="Inactive rabbit toolbar icon" width="32" height="32"> <strong>Inactive:</strong> grey rabbit with orange pause bars and an OFF badge.
-</p>
+<table>
+  <tr><th>Active</th><th>Paused</th></tr>
+  <tr>
+    <td align="center"><img src="icons/rabbit-128.png" alt="Orange Forward sprint rabbit with a skip-next symbol" width="128" height="128"></td>
+    <td align="center"><img src="icons/paused-128.png" alt="Gray Forward sprint rabbit with orange pause bars" width="128" height="128"></td>
+  </tr>
+  <tr>
+    <td>Orange rabbit with a skip-next symbol. At least one automatic action is enabled.</td>
+    <td>The same rabbit stays visible in gray with orange pause bars. The toolbar also shows an <strong>OFF</strong> badge.</td>
+  </tr>
+</table>
+
+The toolbar and popup both reflect this state. Paused also covers the case where
+both individual actions are disabled.
 
 You can use click-only mode, seek-only mode, both actions, or neither. The popup
 shows **Active**, **Paused**, or **No automatic actions** to distinguish them.
@@ -156,6 +174,7 @@ checks the tab's URL again before sending input.
 2. Copy the new files into the **same folder Chrome already loads**, replacing
    the old files. Keep its location unchanged.
 3. Open `chrome://extensions` and click **Reload** on the extension's card.
+   Confirm its version is **1.3.2**.
 4. Review any new permission request, then reload YouTube.
 
 Do not remove the extension or load the update from a different folder as a new

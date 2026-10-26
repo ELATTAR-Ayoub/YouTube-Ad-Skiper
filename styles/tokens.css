@@ -1,4 +1,4 @@
-/* Required values from Elattar styles/tokens.css and motion.css; plain-CSS MV3 port. */
+/* Plain-CSS MV3 tokens. Rabbit orange #fc7b1e is the user-requested brand accent; darker ink preserves light-theme text contrast. */
 @font-face{font-family:Inter;src:url('../fonts/inter-variable.woff2') format('woff2');font-weight:100 900;font-display:swap}
 :root{
  --spacing:4px;--radius-lg:12px;--radius-pill:999px;
@@ -6,7 +6,7 @@
  --text-h4:1.25rem;--text-body:.875rem;--text-small:.75rem;--text-number-xl:3rem;--leading-number-xl:3rem;--text-number-md:1.5rem;
  --duration-tick:80ms;--duration-fast:150ms;--duration-normal:250ms;--duration-slow:400ms;--ease-enter:cubic-bezier(.22,1,.36,1);
  --background:hsl(0 0% 100%);--foreground:hsl(240 10% 3.9%);--card:hsl(0 0% 100%);--muted:hsl(240 4.8% 95.9%);--muted-foreground:hsl(240 4% 40%);--accent:hsl(240 4.8% 95.9%);--border:hsl(240 5.9% 90%);
- --value-ink:#4d7c0f;--action-ink:hsl(224 76% 33%);--ring:hsl(217 91% 53%);--success-ink:#047857;
+ --value-ink:#a64200;--action-ink:#a64200;--action-fill:#fc7b1e;--ring:#a64200;--success-ink:#047857;
  color-scheme:light;
 }
-:root[data-theme=dark]{--background:hsl(240 10% 3.9%);--foreground:hsl(0 0% 98%);--card:hsl(240 5.9% 10%);--muted:hsl(240 3.7% 15.9%);--muted-foreground:hsl(240 4.9% 83.9%);--accent:hsl(240 5.3% 26.1%);--border:hsl(240 3.7% 15.9%);--value-ink:#d9f99d;--action-ink:hsl(213 94% 78%);--ring:hsl(213 94% 78%);--success-ink:#10b981;color-scheme:dark}
+:root[data-theme=dark]{--background:hsl(240 10% 3.9%);--foreground:hsl(0 0% 98%);--card:hsl(240 5.9% 10%);--muted:hsl(240 3.7% 15.9%);--muted-foreground:hsl(240 4.9% 83.9%);--accent:hsl(240 5.3% 26.1%);--border:hsl(240 3.7% 15.9%);--value-ink:#fc7b1e;--action-ink:#fc7b1e;--action-fill:#fc7b1e;--ring:#fc7b1e;--success-ink:#10b981;color-scheme:dark}

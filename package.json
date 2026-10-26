@@ -1,6 +1,6 @@
 {
   "name": "youtube-ad-skiper",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "private": true,
   "description": "Local YouTube ad skipper with skip counts and a rabbit popup.",
   "scripts": { "test": "node tests/run.cjs" },

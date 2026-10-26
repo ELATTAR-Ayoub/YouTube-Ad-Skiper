@@ -7,14 +7,20 @@
  <link rel="stylesheet" href="styles/tokens.css">
  <link rel="stylesheet" href="popup.css">
  <script src="stats.js" defer></script>
+ <script src="settings.js" defer></script>
  <script src="popup.js" defer></script>
 </head>
 <body>
  <main class="popup" aria-busy="true" id="popup">
   <header class="header">
-   <div class="brand"><img src="icons/rabbit-128.png" alt="" width="40" height="40"><div><h1>Hop past the ads.</h1><p>Your skips, at a glance</p></div></div>
+   <div class="brand"><img src="icons/rabbit-128.png" alt="" width="40" height="40"><div><h1 id="view-title">Hop past the ads.</h1><p id="activity-status">Loading settings…</p></div></div>
+   <div class="header-controls">
+   <button id="open-settings" class="icon-button" type="button" aria-label="Open settings" title="Settings"><svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 3-1 3-3 1-2 5 2 5 3 1 1 3h6l1-3 3-1 2-5-2-5-3-1-1-3z"/><circle cx="12" cy="12" r="3"/></svg></button>
+   <button id="back" class="icon-button" type="button" aria-label="Back to your counts" title="Back to counts" hidden><svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m12 5-7 7 7 7 M5 12h15"/></svg></button>
    <button id="theme" class="icon-button" type="button" aria-label="Theme: system. Switch to light theme." title="Theme: system"><svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path id="theme-path" d="M4 4h16v12H4z M8 20h8 M12 16v4"/></svg></button>
+   </div>
   </header>
+  <div id="stats-view">
   <section class="today" aria-labelledby="today-label">
    <div class="section-top"><h2 id="today-label">Ads skipped today</h2><span id="date" class="muted"></span></div>
    <div class="today-count" id="today" aria-hidden="true">—</div>
@@ -32,6 +38,18 @@
   </section>
   <div id="error" class="error" hidden><p>Couldn't load your counts.</p><button id="retry" type="button">Try again</button></div>
   <footer><p><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Stored only on this device</p><p id="tracking-note">Counting starts with this update.</p></footer>
+  </div>
+  <section id="settings-view" aria-label="Ad skipping settings" hidden>
+   <div class="setting-master setting-row">
+    <div class="setting-copy"><h2 id="enabled-label"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 2v10 M6 5a9 9 0 1 0 12 0"/></svg>Automatic ad skipping</h2><p id="master-help">Loading your preferences…</p></div>
+    <button id="setting-enabled" class="switch" type="button" role="switch" aria-checked="false" aria-labelledby="enabled-label" aria-describedby="master-help" disabled><span class="switch-track" aria-hidden="true"><span></span></span></button>
+   </div>
+   <div class="settings-intro"><h2>Choose what happens</h2><p id="behavior-help">Both actions work together automatically.</p></div>
+   <div class="setting-row"><div class="setting-copy"><h2 id="seek-label">Jump ads to the end</h2><p id="seek-help">Advance detected ad videos when seeking is available.</p></div><button id="setting-seekAds" class="switch" type="button" role="switch" aria-checked="false" aria-labelledby="seek-label" aria-describedby="seek-help" disabled><span class="switch-track" aria-hidden="true"><span></span></span></button></div>
+   <div class="setting-row"><div class="setting-copy"><h2 id="click-label">Click Skip buttons</h2><p id="click-help">Click available Skip controls, including ad end cards.</p></div><button id="setting-clickSkip" class="switch" type="button" role="switch" aria-checked="false" aria-labelledby="click-label" aria-describedby="click-help" disabled><span class="switch-track" aria-hidden="true"><span></span></span></button></div>
+   <div id="settings-error" class="error" hidden><p id="settings-error-text">Couldn't save your change.</p><button id="settings-retry" type="button">Try again</button></div>
+   <p id="settings-feedback" class="settings-feedback">Changes save automatically on this device.</p>
+  </section>
   <p id="status" class="sr-only" role="status" aria-live="polite"></p>
  </main>
 </body>

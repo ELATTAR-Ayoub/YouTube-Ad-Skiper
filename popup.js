@@ -15,11 +15,71 @@
  let theme = 'system';
  let storedStats;
  let readGeneration = 0;
+ let statsRevision = 0;
+ let preferencesRevision = 0;
  let animationFrame;
  const displayed = {today:0,week:0,month:0,year:0};
  let hasRendered = false;
  let loadingMessage;
+ let settings = globalThis.SkipSettings.normalize();
+ let settingsReady = false;
+ let savingSettings = false;
+ let failedSettings = null;
+ let currentView = 'stats';
+ const settingLabels = {enabled:'Automatic ad skipping',seekAds:'Jump ads to the end',clickSkip:'Click Skip buttons'};
  function announce(message) {byId('status').textContent = message;}
+ function renderSettings() {
+  const active = globalThis.SkipSettings.active(settings);
+  byId('activity-status').textContent = !settingsReady ? 'Settings unavailable' : !settings.enabled ? 'Paused' : active ? 'Active' : 'No automatic actions';
+  for (const key of Object.keys(settingLabels)) {
+   const control = byId(`setting-${key}`);
+   control.setAttribute('aria-checked', String(settingsReady && settings[key]));
+   control.disabled = !settingsReady || savingSettings;
+  }
+  byId('master-help').textContent = !settingsReady ? 'Load your preferences to make changes.' : settings.enabled ? 'Your selected actions run on YouTube.' : 'Paused. Your action preferences are kept.';
+  byId('behavior-help').textContent = !settings.enabled ? 'You can adjust these while skipping is paused.' : active ? 'Your selected actions run automatically.' : 'Turn on an action to resume automatic skipping.';
+ }
+ function changeView(view) {
+  currentView = view;
+  const isSettings = view === 'settings';
+  byId('stats-view').hidden = isSettings;
+  byId('settings-view').hidden = !isSettings;
+  byId('open-settings').hidden = isSettings;
+  byId('back').hidden = !isSettings;
+  byId('view-title').textContent = isSettings ? 'Settings' : 'Hop past the ads.';
+  (isSettings ? byId('back') : byId('open-settings')).focus();
+ }
+ async function saveSettings(next) {
+  if (!settingsReady || savingSettings) return;
+  const sourceControl = document.activeElement;
+  const previous = {...settings};
+  savingSettings = true;
+  byId('settings-retry').disabled = true;
+  settings = globalThis.SkipSettings.normalize(next);
+  byId('settings-error').hidden = true;
+  byId('settings-feedback').textContent = 'Saving your preferences…';
+  renderSettings();
+  try {
+   await chrome.storage.local.set({skipSettings:settings});
+   failedSettings = null;
+   byId('settings-feedback').textContent = 'Preferences saved. Changes apply immediately.';
+   announce('Ad skipping preferences saved.');
+  } catch {
+   failedSettings = {...settings};
+   settings = previous;
+   byId('settings-error-text').textContent = "Couldn't save your change. Your previous preferences are still active.";
+   byId('settings-error').hidden = false;
+   byId('settings-feedback').textContent = 'Choose Try again to save your change.';
+   announce("Couldn't save your change. Your previous preferences are still active. Choose Try again.");
+  } finally {
+   savingSettings = false;
+   byId('settings-retry').disabled = false;
+   renderSettings();
+   if (currentView === 'settings' && (document.activeElement === document.body || document.activeElement?.closest('[hidden]'))) {
+    (sourceControl?.id?.startsWith('setting-') ? sourceControl : byId('setting-enabled')).focus();
+   }
+  }
+ }
  function applyTheme() {
   document.documentElement.dataset.theme = theme === 'system' ? (systemTheme.matches ? 'dark' : 'light') : theme;
   const next = themeOrder[(themeOrder.indexOf(theme) + 1) % themeOrder.length];
@@ -104,24 +164,46 @@
  }
  async function load() {
   const generation = ++readGeneration;
+  const previousStatsRevision = statsRevision;
+  const previousPreferencesRevision = preferencesRevision;
   clearTimeout(loadingMessage);
   byId('popup').setAttribute('aria-busy', 'true');
   byId('retry').disabled = true;
   byId('retry').textContent = 'Loading…';
+  byId('settings-retry').disabled = true;
+  byId('settings-retry').textContent = 'Loading…';
+  if (!settingsReady) byId('settings-feedback').textContent = 'Loading your preferences…';
   loadingMessage = setTimeout(() => {
    if (generation !== readGeneration) return;
    byId('daily-note').textContent = hasRendered ? 'Refreshing your saved counts…' : 'Still loading your saved counts…';
    announce('Loading your saved counts. This is taking a moment.');
   }, 1000);
   try {
-   const data = await chrome.storage.local.get(['skipStats', 'popupTheme']);
+   const data = await chrome.storage.local.get(['skipStats', 'popupTheme', 'skipSettings']);
    if (generation !== readGeneration) return;
    clearTimeout(loadingMessage);
-   storedStats = data.skipStats;
+   if (previousStatsRevision === statsRevision) storedStats = data.skipStats;
+   if (previousPreferencesRevision === preferencesRevision) settings = globalThis.SkipSettings.normalize(data.skipSettings);
+   settingsReady = true;
+   renderSettings();
+   byId('settings-feedback').textContent = 'Changes save automatically on this device.';
+   if (!failedSettings) byId('settings-error').hidden = true;
    theme = themeOrder.includes(data.popupTheme) ? data.popupTheme : 'system';
    applyTheme(); render();
   } catch (error) {
-   if (generation === readGeneration) showError();
+   if (generation === readGeneration) {
+    showError();
+    if (!settingsReady) {
+     byId('settings-error-text').textContent = "Couldn't load your preferences. Choose Try again.";
+     byId('settings-error').hidden = false;
+     renderSettings();
+    }
+   }
+  } finally {
+   if (generation === readGeneration) {
+    byId('settings-retry').disabled = false;
+    byId('settings-retry').textContent = 'Try again';
+   }
   }
  }
  byId('theme').addEventListener('click', async () => {
@@ -132,12 +214,22 @@
   catch {announce('Theme changed for this popup, but could not be saved. Try switching again.');}
  });
  byId('retry').addEventListener('click', load);
+ byId('open-settings').addEventListener('click', () => changeView('settings'));
+ byId('back').addEventListener('click', () => changeView('stats'));
+ document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && currentView === 'settings') {
+   event.preventDefault(); event.stopPropagation(); changeView('stats');
+  }
+ });
+ for (const key of Object.keys(settingLabels)) byId(`setting-${key}`).addEventListener('click', () => saveSettings({...settings,[key]:!settings[key]}));
+ byId('settings-retry').addEventListener('click', () => failedSettings ? saveSettings(failedSettings) : load());
  systemTheme.addEventListener('change', () => {if (theme === 'system') applyTheme();});
  if (globalThis.chrome?.storage?.onChanged) chrome.storage.onChanged.addListener((changes, area) => {
   if (area !== 'local') return;
   if (changes.popupTheme) {theme = themeOrder.includes(changes.popupTheme.newValue) ? changes.popupTheme.newValue : 'system'; applyTheme();}
+  if (changes.skipSettings) {++preferencesRevision;settings=globalThis.SkipSettings.normalize(changes.skipSettings.newValue);settingsReady=true;renderSettings();}
   if (changes.skipStats) {
-   ++readGeneration;
+   ++statsRevision;
    storedStats = changes.skipStats.newValue;
    try {render(); announce('Ad skip counts updated.');} catch {showError();}
   }

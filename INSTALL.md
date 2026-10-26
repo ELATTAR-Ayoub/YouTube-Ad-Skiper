@@ -1,4 +1,16 @@
-# YouTube Skip Button Clicker — version 1.2.1
+# YouTube Skip Button Clicker — version 1.3.0
+
+Version 1.3.0 adds master activation and independent action settings. Open the
+rabbit popup, then the Settings gear. **Automatic ad skipping** pauses/resumes
+both actions without losing your preferences. **Jump ads to the end** and
+**Click Skip buttons** can each be switched off separately. Preferences are
+stored locally and apply to open YouTube tabs immediately after the initial
+update/reload. Existing skip counts are preserved.
+
+The toolbar uses the rabbit icon while an action is enabled, and a grey power
+icon with an OFF badge when paused or when both actions are disabled. The
+popup distinguishes Paused from No automatic actions. Both actions default
+to enabled when no preferences have been saved.
 
 Version 1.2.1 fixes the click-only loop when a visible Skip control is ignored.
 Each polling tick independently tries seeking a detected ad and then clicking
@@ -24,7 +36,7 @@ are not counted. Counts are best effort: very brief transitions, changing
 YouTube markup, or closing a tab before completion is observed can miss a count.
 
 Only daily totals, recent random IDs for duplicate protection, the tracking
-start date and your popup theme are stored locally. No video titles, URLs or
+start date, popup theme and action preferences are stored locally. No video titles, URLs or
 browsing history are saved or transmitted. Uninstalling clears this data.
 Preserve counts by updating the SAME loaded folder and using Reload; do not
 remove the extension or load another folder as a second extension.
@@ -50,7 +62,7 @@ seeked. When seeking is unavailable, it keeps looking for a Skip button.
 1. Extract the new ZIP.
 2. Replace the files in the SAME folder previously selected with Load unpacked.
 3. Open chrome://extensions and click Reload on YouTube Skip Button Clicker.
-4. Confirm the version is 1.2.1. Allow the storage permission if Chrome asks.
+4. Confirm the version is 1.3.0. Allow the storage permission if Chrome asks.
 5. Close YouTube Developer Tools and reload YouTube.
 
 Keep the old Tampermonkey auto-skip script disabled. Do not load a second copy

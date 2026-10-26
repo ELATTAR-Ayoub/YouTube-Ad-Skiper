@@ -64,9 +64,9 @@ test('seek-in-progress rollback does not create a false ad',()=>{
 async function workerChecks(){
  let stored={};let installed;
  const worker=vm.createContext({URL,Date,Set,console,findYouTubeSkip:()=>null,importScripts:()=>{},
- chrome:{storage:{local:{get:async()=>{await new Promise(r=>setTimeout(r,1));return structuredClone(stored);},set:async v=>{await new Promise(r=>setTimeout(r,1));Object.assign(stored,structuredClone(v));}}},
+ chrome:{action:{setIcon:async()=>{},setBadgeText:async()=>{},setTitle:async()=>{}},tabs:{},storage:{onChanged:{addListener:()=>{}},local:{get:async()=>{await new Promise(r=>setTimeout(r,1));return structuredClone(stored);},set:async v=>{await new Promise(r=>setTimeout(r,1));Object.assign(stored,structuredClone(v));}}},
  runtime:{onInstalled:{addListener:fn=>{installed=fn;}},onMessage:{addListener:()=>{}}}}});
- vm.runInContext(statsSource,worker);vm.runInContext(fs.readFileSync(root+'background.js','utf8'),worker);
+ vm.runInContext(statsSource,worker);vm.runInContext(fs.readFileSync(root+'settings.js','utf8'),worker);vm.runInContext(fs.readFileSync(root+'background.js','utf8'),worker);
  installed();await vm.runInContext('statsWrites',worker);assert.equal(stored.skipStats.version,1);
  await Promise.all(Array.from({length:40},(_,i)=>vm.runInContext(`recordAd('concurrent-${String(i).padStart(4,'0')}')`,worker)));
  assert.equal(Object.values(stored.skipStats.days).reduce((a,b)=>a+b,0),40);
@@ -83,10 +83,10 @@ async function contentChecks(){
  findYouTubeSkip:()=>stages[index]?.startsWith('card')?{x:1,y:1}:null,
  readYouTubeAdState:()=>({page:'watch?v=test',isAd:stages[index]!=='main',endCard:stages[index]?.startsWith('card'),src:index<2?'src-one':'src-two',pod:index<2?'1 of 2':'2 of 2',time:0,loaded:stages[index]?.startsWith('ad'),seeking:false}),
  finishYouTubeAd:()=>{if(!stages[index]?.startsWith('ad'))return false;actions.push('seek:'+stages[index++]);return true;},
- chrome:{runtime:{sendMessage:async message=>{
+ chrome:{storage:{local:{get:async()=>({})},onChanged:{addListener:()=>{}}},runtime:{sendMessage:async message=>{
  if(message.type==='youtube-ad-completed'){events.push(message.id);return{saved:true};}
  actions.push('click:'+stages[index++]);return{clicked:true};}}},setInterval:(fn,ms)=>{assert.equal(ms,1000);poll=fn;}});
- vm.runInContext(trackerSource,c);vm.runInContext(fs.readFileSync(root+'content.js','utf8'),c);
+ vm.runInContext(trackerSource,c);vm.runInContext(fs.readFileSync(root+'settings.js','utf8'),c);vm.runInContext(fs.readFileSync(root+'content.js','utf8'),c);
  await new Promise(r=>setImmediate(r));for(let i=0;i<6;i++){now+=1000;await poll();}
  assert.deepEqual(actions,['seek:ad-one','click:card-one','seek:ad-two','click:card-two']);assert.equal(events.length,2);assert.equal(new Set(events).size,2);
  checks++;console.log('PASS full content loop: four actions, two confirmed ad counts, one-second polling');

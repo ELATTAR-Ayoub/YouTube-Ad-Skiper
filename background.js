@@ -1,6 +1,38 @@
-importScripts('find-skip.js', 'stats.js');
+importScripts('find-skip.js', 'stats.js', 'settings.js');
 const busyTabs = new Set();
+const knownTabs = new Set();
 let statsWrites = Promise.resolve();
+let toolbarRevision=0;
+
+async function readSettings() {
+  const stored=await chrome.storage.local.get('skipSettings');
+  return SkipSettings.normalize(stored.skipSettings);
+}
+async function updateToolbar(settings) {
+  const revision=++toolbarRevision;
+  const active=SkipSettings.active(settings);
+  const title=!settings.enabled ? 'YouTube Skip: paused' : !active ? 'YouTube Skip: no automatic actions enabled' : 'YouTube Skip: active';
+  const path=Object.fromEntries([16,32,48,128].map(size=>[size,`icons/${active?'rabbit':'paused'}-${size}.png`]));
+  await chrome.action.setIcon({path});
+  if (revision!==toolbarRevision) return;
+  await chrome.action.setBadgeText({text:active?'':'OFF'});
+  await chrome.action.setTitle({title});
+  for (const tabId of knownTabs) {
+    await chrome.action.setBadgeText({tabId,text:active?'':'OFF'}).catch(()=>{});
+    await chrome.action.setTitle({tabId,title}).catch(()=>{});
+  }
+}
+async function initializeToolbar() {
+  const revision=toolbarRevision;
+  const settings=await readSettings();
+  if (revision===toolbarRevision) await updateToolbar(settings);
+}
+chrome.storage.onChanged.addListener((changes,area)=>{
+  if (area==='local' && changes.skipSettings) updateToolbar(SkipSettings.normalize(changes.skipSettings.newValue)).catch(console.warn);
+});
+chrome.runtime.onStartup?.addListener(()=>{initializeToolbar().catch(console.warn);});
+chrome.tabs.onRemoved?.addListener(tabId=>knownTabs.delete(tabId));
+initializeToolbar().catch(()=>{});
 
 function recordAd(id, completedAt = Date.now()) {
   const date = Number.isFinite(completedAt) && completedAt>=0 && completedAt<=Date.now()+60000 ? new Date(completedAt) : new Date();
@@ -17,8 +49,12 @@ function recordAd(id, completedAt = Date.now()) {
 
 chrome.runtime.onInstalled?.addListener(() => {
   const task = statsWrites.then(async () => {
-    const stored=await chrome.storage.local.get('skipStats');
-    if (!stored.skipStats) await chrome.storage.local.set({skipStats:SkipStats.empty()});
+    const stored=await chrome.storage.local.get(['skipStats','skipSettings']);
+    const values={};
+    if (!stored.skipStats) values.skipStats=SkipStats.empty();
+    if (!stored.skipSettings) values.skipSettings=SkipSettings.normalize();
+    if (Object.keys(values).length) await chrome.storage.local.set(values);
+    await initializeToolbar();
   });
   statsWrites=task.catch(error=>console.warn('[YouTube Skip] Could not initialize counts.',error));
 });
@@ -35,6 +71,8 @@ async function clickSkip(tabId) {
   const target = { tabId };
   let attached = false;
   try {
+    const settings=await readSettings();
+    if (!settings.enabled || !settings.clickSkip) return {clicked:false,disabled:true};
     const tab = await chrome.tabs.get(tabId);
     if (!tab.url) throw new Error('YouTube site access is missing. Allow YouTube access in this extension\'s settings, then reload the tab.');
     if (!tab.active || !isYouTube(tab.url)) return { clicked: false };
@@ -53,6 +91,10 @@ async function clickSkip(tabId) {
     const current = await chrome.tabs.get(tabId);
     if (!current.url) throw new Error('YouTube site access is missing. Reload the extension and allow access to YouTube.');
     if (!current.active || current.url !== point.url) return { clicked: false };
+    // Recheck after asynchronous attach/inspection so pausing from the popup
+    // also blocks a request that was already in flight before the toggle.
+    const latest=await readSettings();
+    if (!latest.enabled || !latest.clickSkip) return {clicked:false,disabled:true};
     await chrome.debugger.sendCommand(target, 'Input.dispatchMouseEvent', {
       type: 'mousePressed', x: point.x, y: point.y,
       button: 'left', buttons: 1, clickCount: 1,
@@ -82,6 +124,7 @@ chrome.runtime.onMessage.addListener((message, sender, reply) => {
     return true;
   }
   const tabId = sender.tab.id;
+  knownTabs.add(tabId);
   if (busyTabs.has(tabId)) { reply({ clicked: false }); return; }
   busyTabs.add(tabId);
   clickSkip(tabId).then(reply, error => reply({ error: String(error) }))

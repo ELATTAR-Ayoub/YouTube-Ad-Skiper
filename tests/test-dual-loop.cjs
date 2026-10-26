@@ -14,7 +14,7 @@ async function run(options={}){
   if(options.ignoreFirstClick&&phase===0&&clicks===0)return false;
   actions.push('seek:'+stages[phase]);phase++;return true;
  },
- chrome:{runtime:{sendMessage:async message=>{
+ chrome:{storage:{local:{get:async()=>({})},onChanged:{addListener:()=>{}}},runtime:{sendMessage:async message=>{
   if(message.type==='youtube-ad-completed'){events.push(message.id);return{saved:true};}
   clicks++;actions.push('click:'+stages[phase]);
   if(options.errorFirstClick&&clicks===1)return{error:'Debugger unavailable'};
@@ -23,6 +23,7 @@ async function run(options={}){
   return{clicked:true};
  }}},setInterval:(fn,ms)=>{assert.equal(ms,1000);poll=fn;}});
  vm.runInContext(fs.readFileSync(root+'tracker.js','utf8'),context);
+ vm.runInContext(fs.readFileSync(root+'settings.js','utf8'),context);
  vm.runInContext(fs.readFileSync(root+'content.js','utf8'),context);
  await new Promise(r=>setImmediate(r));
  for(let i=0;i<10&&phase<4;i++){now+=1000;await poll();}

@@ -1,4 +1,13 @@
-# Version 1.2.1 verification
+# Version 1.3.0 verification
+
+- Added settings regressions for every effective action combination, live
+  pause/resume with preserved preferences, safe startup while settings load,
+  stale initial reads, disabled native-click requests, pausing during native
+  inspection, and toolbar icon/badge changes. All pass.
+- Browser preview verified master pause, independent controls, no-actions
+  status, Escape/back navigation, save-failure rollback and successful Retry.
+  Settings measured 400px wide, 518px high; its failed-save state fits at 596px.
+  Preview storage was simulated outside the packaged extension.
 
 - Added four simulated regressions for a visible Skip button on both ads,
   unseekable second-ad media, an ignored click, and a debugger error. All pass

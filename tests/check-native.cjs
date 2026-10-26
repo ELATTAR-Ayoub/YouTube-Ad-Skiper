@@ -30,6 +30,7 @@ function service(options = {}) {
   let listener, reads = 0;
   const context = vm.createContext({ URL, Set, importScripts: () => {}, findYouTubeSkip: () => null,
     chrome: {
+      storage:{local:{get:async()=>({})},onChanged:{addListener:()=>{}}},
       tabs: {get: async () => ({active: !options.inactive,
         url: options.missingURL ? undefined : options.navigate && ++reads > 1 ? 'https://www.youtube.com/watch?v=other' : 'https://www.youtube.com/watch?v=test'})},
       debugger: {
@@ -41,10 +42,11 @@ function service(options = {}) {
           if (options.failPress && args.type === 'mousePressed') throw Error('Input failure');
         },
       },
-      action: {setBadgeText:async () => {}, setTitle:async () => {}},
+      action: {setIcon:async()=>{},setBadgeText:async () => {}, setTitle:async () => {}},
       runtime: {onMessage:{addListener:fn => {listener=fn;}}},
     },
   });
+  vm.runInContext(fs.readFileSync(dir+'settings.js','utf8'),context);
   vm.runInContext(worker, context);
   return { calls, run: () => vm.runInContext('clickSkip(42)', context), listener };
 }

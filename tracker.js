@@ -37,6 +37,7 @@
       return this.current.id;
     }
     markAction(id) { if (this.current?.id===id) this.current.acted=true; }
+    reset() { this.current=null; this.lastClosed=null; this.page=null; }
     takeCompleted() { return this.completed.splice(0); }
   }
   globalThis.SkipAdTracker=SkipAdTracker;

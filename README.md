@@ -15,6 +15,7 @@
   <a href="#install-in-chrome">Install</a> ·
   <a href="#features">Features</a> ·
   <a href="#screenshots">Screenshots</a> ·
+  <a href="#controls-and-settings">Settings</a> ·
   <a href="#privacy-and-permissions">Privacy</a> ·
   <a href="#troubleshooting">Troubleshooting</a>
 </p>
@@ -26,6 +27,7 @@
 | Automatic ad handling | Attempts to advance detected ad videos and then clicks available Skip buttons. |
 | Consecutive ads | Keeps checking through additional ads, Skip controls and advertiser end cards. |
 | One-second checks | Checks once per second while the YouTube tab is active and visible. |
+| Independent controls | Pause all automation or enable ad seeking and Skip clicking separately. |
 | Skip statistics | Daily, weekly, monthly and yearly totals, with duplicate-attempt protection. |
 | Visual activity | Animated counts and a seven-day chart in the rabbit popup. |
 | Theme choices | Light, dark and system themes, with reduced-motion support. |
@@ -48,6 +50,8 @@
 Screenshots use **sample counts** to demonstrate the interface. Your own counts
 start after installation; the extension does not include demonstration data.
 
+<p align="center"><img src="docs/images/settings-dark.png" alt="Settings popup with master activation, Jump ads to the end, and Click Skip buttons switches" width="360"></p>
+
 ## Install in Chrome
 
 No build step or Tampermonkey is required.
@@ -68,13 +72,38 @@ Open a YouTube video to use it. To see your counts, click Chrome's puzzle-piece
 **Extensions** menu and select **YouTube Skip Button Clicker**. Pin its rabbit
 icon for quicker access, then click the rabbit to open the popup.
 
+## Controls and settings
+
+Click the rabbit icon, then the **Settings** gear.
+
+| Control | Behavior |
+| --- | --- |
+| **Automatic ad skipping** | Master on/off switch. Off pauses both automatic actions and keeps your individual preferences. |
+| **Jump ads to the end** | Enable or disable advancing detected ad videos to their end. |
+| **Click Skip buttons** | Enable or disable browser-level clicks on available Skip controls and end-card Skip buttons. |
+
+Changes save locally and apply to already-loaded YouTube tabs without a reload.
+After updating the extension itself, reload YouTube once to load the new code.
+Pausing does not erase your counters. The two action preferences can be edited
+while paused. If both actions are off, no automatic action runs even when the
+master switch is on.
+
+<p>
+  <img src="icons/rabbit-48.png" alt="Active rabbit toolbar icon" width="32" height="32"> <strong>Active:</strong> orange rabbit.
+  &nbsp;
+  <img src="icons/paused-48.png" alt="Inactive power toolbar icon" width="32" height="32"> <strong>Inactive:</strong> grey power icon and an OFF badge.
+</p>
+
+You can use click-only mode, seek-only mode, both actions, or neither. The popup
+shows **Active**, **Paused**, or **No automatic actions** to distinguish them.
+
 ## How it works
 
 While a YouTube tab is active and visible, the extension checks once per second:
 
-1. If YouTube marks the player as showing an ad and the ad video has a finite,
+1. If **Jump ads to the end** is enabled, YouTube marks the player as showing an ad and the ad video has a finite,
    loaded duration, try advancing it to the end.
-2. Look again for an available Skip button and send a browser-level mouse
+2. If **Click Skip buttons** is enabled, look again for an available Skip button and send a browser-level mouse
    press and release to it, whether the seek worked or not.
 3. Repeat for the next ad, another Skip button or an advertiser end card.
 
@@ -106,14 +135,14 @@ remote libraries or external fonts. YouTube still downloads its own videos and
 ad data.
 
 Only daily totals, a bounded list of random IDs for duplicate protection, the
-tracking start date and your popup theme are stored in **`chrome.storage.local`**.
+tracking start date, popup theme and action preferences are stored in **`chrome.storage.local`**.
 Video titles, video URLs, credentials and browsing history are not saved by the
 extension. Uninstalling it clears its local data.
 
 | Permission | Purpose |
 | --- | --- |
 | `debugger` | Send browser-level input to the Skip button. Chrome grants this a broad capability and may show a debugging notification during clicks. The code attaches briefly to the checked YouTube tab and detaches afterward. |
-| `storage` | Keep your counts and theme locally across browser restarts. |
+| `storage` | Keep your counts, theme and action preferences locally across browser restarts. |
 | YouTube host access | Run the content script and check tab URLs on `youtube.com`, `www.youtube.com` and `m.youtube.com`. |
 
 The debugger permission is powerful and is **not restricted by the YouTube

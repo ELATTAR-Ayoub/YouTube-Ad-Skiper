@@ -91,7 +91,7 @@ master switch is on.
 <p>
   <img src="icons/rabbit-48.png" alt="Active rabbit toolbar icon" width="32" height="32"> <strong>Active:</strong> orange rabbit.
   &nbsp;
-  <img src="icons/paused-48.png" alt="Inactive power toolbar icon" width="32" height="32"> <strong>Inactive:</strong> grey power icon and an OFF badge.
+  <img src="icons/paused-48.png" alt="Inactive rabbit toolbar icon" width="32" height="32"> <strong>Inactive:</strong> grey rabbit with orange pause bars and an OFF badge.
 </p>
 
 You can use click-only mode, seek-only mode, both actions, or neither. The popup

@@ -1,13 +1,13 @@
-# YouTube Skip Button Clicker — version 1.3.1
+# YouTube Skip Button Clicker — version 1.3.2
 
-Version 1.3.1 adds master activation and independent action settings. Open the
+Version 1.3.2 uses the selected Forward sprint rabbit for both active and paused states. It includes master activation and independent action settings. Open the
 rabbit popup, then the Settings gear. **Automatic ad skipping** pauses/resumes
 both actions without losing your preferences. **Jump ads to the end** and
 **Click Skip buttons** can each be switched off separately. Preferences are
 stored locally and apply to open YouTube tabs immediately after the initial
 update/reload. Existing skip counts are preserved.
 
-The toolbar uses the rabbit icon while an action is enabled, and a grey power
+The toolbar uses the rabbit icon while an action is enabled, and a grey rabbit with orange pause bars
 icon with an OFF badge when paused or when both actions are disabled. The
 popup distinguishes Paused from No automatic actions. Both actions default
 to enabled when no preferences have been saved.
@@ -62,7 +62,7 @@ seeked. When seeking is unavailable, it keeps looking for a Skip button.
 1. Extract the new ZIP.
 2. Replace the files in the SAME folder previously selected with Load unpacked.
 3. Open chrome://extensions and click Reload on YouTube Skip Button Clicker.
-4. Confirm the version is 1.3.1. Allow the storage permission if Chrome asks.
+4. Confirm the version is 1.3.2. Allow the storage permission if Chrome asks.
 5. Close YouTube Developer Tools and reload YouTube.
 
 Keep the old Tampermonkey auto-skip script disabled. Do not load a second copy

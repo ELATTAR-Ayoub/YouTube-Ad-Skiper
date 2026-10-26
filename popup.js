@@ -29,6 +29,7 @@
  const settingLabels = {enabled:'Automatic ad skipping',seekAds:'Jump ads to the end',clickSkip:'Click Skip buttons'};
  function announce(message) {byId('status').textContent = message;}
  function renderSettings() {
+  byId('brand-icon').src = 'icons/' + (settingsReady && globalThis.SkipSettings.active(settings) ? 'rabbit' : 'paused') + '-128.png';
   const active = globalThis.SkipSettings.active(settings);
   byId('activity-status').textContent = !settingsReady ? 'Settings unavailable' : !settings.enabled ? 'Paused' : active ? 'Active' : 'No automatic actions';
   for (const key of Object.keys(settingLabels)) {
